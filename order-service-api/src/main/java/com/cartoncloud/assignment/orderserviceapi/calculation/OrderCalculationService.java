@@ -22,7 +22,6 @@ public class OrderCalculationService {
 
   public List<ProductGroupTotal> calculateProductTotal(List<PurchaseOrder> orderLists) {
     Map<Integer, BigDecimal> productGroupTotal = new HashMap<>();
-   // Multimap<Integer, BigDecimal> multimap = ArrayListMultimap.create();
     for (PurchaseOrder order : orderLists) {
       List<PurchaseOrderProduct> poProductLst = order.getData().getPurchaseOrderProduct();
       for (PurchaseOrderProduct product : poProductLst) {
@@ -35,7 +34,6 @@ public class OrderCalculationService {
           productGroupTotal.put(productId, productTotal);
         }
 
-        //    multimap.put(new Integer(product.getProductTypeId()),performFormulaBasedCalculation(product));
       }
     }
 
@@ -44,24 +42,8 @@ public class OrderCalculationService {
     	for (Map.Entry<Integer, BigDecimal> entry : productGroupTotal.entrySet()) {
     	    productGroupTotalLst.add(new ProductGroupTotal(entry.getKey(), entry.getValue()));
     	}
-//    return getProductGroupTotal(multimap);
     return productGroupTotalLst;
   }
-
-  /* private Map<Integer, BigDecimal> getProductGroupTotal(Multimap<Integer, BigDecimal> multimap) {
-    Map<Integer, BigDecimal> productGroupTotal = new HashMap<>();
-    for (Integer key : multimap.keySet()) {
-      if (productGroupTotal.containsKey(key)) {
-        productGroupTotal.put(key, productGroupTotal.get(key).add((BigDecimal) multimap.get(key)));
-      }
-      else {
-        productGroupTotal.put(key, (BigDecimal) multimap.get(key));
-      }
-    }
-    return productGroupTotal;
-  }
-  */
-
 
   private BigDecimal performFormulaBasedCalculation(PurchaseOrderProduct poProduct) {
     BigDecimal orderTotal = BigDecimal.ZERO;
