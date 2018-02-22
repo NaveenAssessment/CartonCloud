@@ -1,0 +1,27 @@
+package com.cartoncloud.assignment.orderserviceapi.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cartoncloud.assignment.orderserviceapi.calculation.OrderCalculationService;
+import com.cartoncloud.assignment.orderserviceapi.model.ProductGroupTotal;
+import com.cartoncloud.assignment.orderserviceapi.model.PurchaseOrder;
+
+/**
+ * @author naveen
+ *
+ */
+@Service
+public class OrderTotalServiceImpl implements OrderTotalService {
+
+	@Autowired
+	private OrderCalculationService orderCalculationService;
+
+	@Override
+	public List<ProductGroupTotal> calculateOrderTotal(List<PurchaseOrder> orderList) {
+		return orderCalculationService.calculateProductTotal(orderList);
+	}
+
+}
