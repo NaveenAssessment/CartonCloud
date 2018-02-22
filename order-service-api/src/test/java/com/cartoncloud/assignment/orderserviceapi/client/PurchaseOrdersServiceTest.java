@@ -1,10 +1,11 @@
 package com.cartoncloud.assignment.orderserviceapi.client;
 
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Ignore;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +22,13 @@ public class PurchaseOrdersServiceTest {
 	private PurchaseOrdersService service;
 	
 	@Test
-	public void testGetOrderDetails( ) {
-		PurchaseOrder result = service.getOrderDetails("2344");
+	public void testGetOrderDetails( ) throws Exception {
+		List<Integer> order = new ArrayList<>();
+		order.add(2344);
+		List<PurchaseOrder> result = service.getOrderDetails(order);
 		System.out.println("---------------------------");
 		System.out.println(result);
 		assertNotNull(result);
-		assertEquals(result.getInfo(), "SUCCESS");
-	}
-	
-	@Ignore
-	@Test
-	public void testInvalidGetOrderDetails( ) {
-		PurchaseOrder result = service.getOrderDetails("999999");
-		System.out.println("---------------------------");
-		System.out.println(result);
 	}
 
 }

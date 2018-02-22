@@ -1,8 +1,10 @@
 package com.cartoncloud.assignment.orderserviceapi.client;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,43 +33,43 @@ public class PurchaseOrdersService {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public PurchaseOrder getOrderDetails(String id) {
+	public List<PurchaseOrder> getOrderDetails(List<Integer> orderIds) {
 		String url = "https://api.cartoncloud.com.au/CartonCloud_Demo/PurchaseOrders/{id}";
-
-		// URI (URL) parameters
-		Map<String, String> uriParams = new HashMap<String, String>();
-		uriParams.put("id", id);
-
-		// Query parameters
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-				// Add query parameter
-				.queryParam("version", "5").queryParam("associated", "true");
-		String uri = builder.buildAndExpand(uriParams).toUri().toString();
-
-		HttpHeaders headers = setHeaders();
-		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-		System.out.println(uri);
+		List<PurchaseOrder> orderList = new ArrayList<>();
 		restTemplate.getInterceptors()
-				.add(new BasicAuthorizationInterceptor("interview-test@cartoncloud.com.au", "test123456"));
-		
-		ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
-		
-		ObjectMapper mapper = new ObjectMapper();
-		PurchaseOrder purchaseOrder = null;
+		.add(new BasicAuthorizationInterceptor("interview-test@cartoncloud.com.au", "test123456"));
+		for (Integer orderId : orderIds) {
 
-		try {
-			// Convert JSON string to Object
-			purchaseOrder = mapper.readValue(result.getBody(), PurchaseOrder.class);
+			// URI (URL) parameters
+			Map<String, Integer> uriParams = new HashMap<>();
+			uriParams.put("id", orderId);
 
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			// Query parameters
+			UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+					// Add query parameter
+					.queryParam("version", "5").queryParam("associated", "true");
+			String uri = builder.buildAndExpand(uriParams).toUri().toString();
+
+			HttpHeaders headers = setHeaders();
+			HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+			System.out.println(uri);
+		
+			ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
+			ObjectMapper mapper = new ObjectMapper();
+			PurchaseOrder purchaseOrder = null;
+
+			try {
+				// Convert JSON string to Object
+				purchaseOrder = mapper.readValue(result.getBody(), PurchaseOrder.class);
+				orderList.add(purchaseOrder);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
 		}
 
-		return purchaseOrder;
+		return orderList;
 	}
 
 	private HttpHeaders setHeaders() {
